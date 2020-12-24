@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  test:
+    database:
+      replace: none
+  liquibase:
+    contexts: test
+    changeLog: "classpath:/db/changelog/db.changelog-master.xml"
+    drop-first: true
+    default-schema: test
+logging:
+  level:
+    liquibase: INFO
