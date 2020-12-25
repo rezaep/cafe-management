@@ -1,5 +1,6 @@
 package com.sflpro.cafemanager.user.controller;
 
+import com.sflpro.cafemanager.user.controller.model.request.AssignTableRequest;
 import com.sflpro.cafemanager.user.controller.model.request.CreatUserRequest;
 import com.sflpro.cafemanager.user.domain.model.UserModel;
 import com.sflpro.cafemanager.user.service.UserService;
@@ -20,5 +21,10 @@ public class UserController {
     @PostMapping
     public UserModel createUser(@Valid @RequestBody CreatUserRequest request) {
         return userService.createUser(request.getRole(), request.getUsername());
+    }
+
+    @PostMapping("assign")
+    public void assignTableToWaiter(@Valid @RequestBody AssignTableRequest request) {
+        userService.assignTableToUser(request.getUserId(), request.getTableId());
     }
 }
