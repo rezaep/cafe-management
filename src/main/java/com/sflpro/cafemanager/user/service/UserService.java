@@ -39,7 +39,7 @@ public class UserService {
     public void assignTableToUser(long userId, long tableId) {
         User user = findUserById(userId);
 
-        if (!UserRole.WAITER.equals(user.getRole())) {
+        if (!UserRole.ROLE_WAITER.equals(user.getRole())) {
             throw new WrongUserTypeException();
         }
 

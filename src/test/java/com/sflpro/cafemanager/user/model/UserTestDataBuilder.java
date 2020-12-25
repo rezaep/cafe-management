@@ -18,13 +18,13 @@ public class UserTestDataBuilder {
 
     public static UserTestDataBuilder aManager() {
         return aUser()
-                .withRole(UserRole.MANAGER)
+                .withRole(UserRole.ROLE_MANAGER)
                 .withUsername("john");
     }
 
     public static UserTestDataBuilder aWaiter() {
         return aUser()
-                .withRole(UserRole.WAITER)
+                .withRole(UserRole.ROLE_WAITER)
                 .withUsername("arthur");
     }
 
