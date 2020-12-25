@@ -5,5 +5,6 @@
 
     <include file="db.changelog-20201225-create-user-table.xml" relativeToChangelogFile="true"/>
     <include file="db.changelog-20201225-create-table-table.xml" relativeToChangelogFile="true"/>
+    <include file="db.changelog-20201225-create-product-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
