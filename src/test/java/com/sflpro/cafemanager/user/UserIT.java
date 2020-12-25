@@ -2,12 +2,19 @@ package com.sflpro.cafemanager.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sflpro.cafemanager.AbstractIT;
+import com.sflpro.cafemanager.exception.NotFoundException;
+import com.sflpro.cafemanager.table.domain.entity.Table;
+import com.sflpro.cafemanager.table.model.TableTestDataBuilder;
+import com.sflpro.cafemanager.table.repository.TableRepository;
+import com.sflpro.cafemanager.user.controller.model.request.AssignTableRequest;
 import com.sflpro.cafemanager.user.controller.model.request.CreatUserRequest;
 import com.sflpro.cafemanager.user.domain.entity.User;
 import com.sflpro.cafemanager.user.domain.enums.UserRole;
 import com.sflpro.cafemanager.user.domain.model.UserModel;
+import com.sflpro.cafemanager.user.model.UserTestDataBuilder;
 import com.sflpro.cafemanager.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserIT extends AbstractIT {
     public static final String CREATE_USER_URL = "/users";
+    public static final String ASSIGN_TABLE_TO_USER_URL = "/users/assign";
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,10 +40,13 @@ class UserIT extends AbstractIT {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TableRepository tableRepository;
 
     @BeforeEach
     public void setup() {
         userRepository.deleteAll();
+        tableRepository.deleteAll();
     }
 
     @ParameterizedTest
@@ -68,5 +80,33 @@ class UserIT extends AbstractIT {
         assertThat(dbUser.getId()).isNotNull().isGreaterThan(0);
         assertThat(dbUser.getRole()).isEqualTo(role);
         assertThat(dbUser.getUsername()).isEqualTo(username);
+    }
+
+    @Test
+    @Transactional
+    void testAssignTableToWaiter() throws Exception {
+        User waiter = UserTestDataBuilder.aWaiter().build();
+        userRepository.save(waiter);
+
+        Table table = TableTestDataBuilder.anUnassignedTable().build();
+        tableRepository.save(table);
+
+        AssignTableRequest request = new AssignTableRequest()
+                .setUserId(waiter.getId())
+                .setTableId(table.getId());
+
+        String requestJson = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(post(ASSIGN_TABLE_TO_USER_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Table dbTable = tableRepository.findById(table.getId())
+                .orElseThrow(() -> new NotFoundException("Table not found."));
+
+        assertThat(dbTable.getUser()).isEqualTo(waiter);
     }
 }
