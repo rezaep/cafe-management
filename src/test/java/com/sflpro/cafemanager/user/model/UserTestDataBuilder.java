@@ -18,14 +18,12 @@ public class UserTestDataBuilder {
 
     public static UserTestDataBuilder aManager() {
         return aUser()
-                .withId(1)
                 .withRole(UserRole.MANAGER)
                 .withUsername("john");
     }
 
     public static UserTestDataBuilder aWaiter() {
         return aUser()
-                .withId(1)
                 .withRole(UserRole.WAITER)
                 .withUsername("arthur");
     }
