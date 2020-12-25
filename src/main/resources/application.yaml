@@ -14,6 +14,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+        globally_quoted_identifiers: true
     open-in-view: false
   liquibase:
     changeLog: "classpath:/db/changelog/db.changelog-master.xml"
