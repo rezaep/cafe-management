@@ -4,7 +4,7 @@ A simple project based on Java 11, Spring Boot, MySQL, JUnit 5, and Testcontaine
 
 ## Getting Started
 
-These instructions will get you a copy of the project and run on your local machine for development and testing
+These instructions will get you a copy of the project and run on it your local machine for development and testing
 purposes. See deployment for notes on how to deploy the project on a live system.
 
 What things you need to run the project:
@@ -95,6 +95,16 @@ password: "password"
 
 Swagger generates documentation of REST APIs, which is accessible using
 this [link](http://localhost:8080/swagger-ui/index.html).
+
+### Authentication
+
+The `Basic Auth` method is used for simplicity in the authentication process. When the application runs for the first
+time, it creates a very first manager user with the following credentials:
+
+````
+username: admin
+password: admin
+````
 
 ## Authors
 
