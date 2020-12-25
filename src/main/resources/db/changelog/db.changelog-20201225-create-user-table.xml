@@ -8,12 +8,23 @@
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="role" type="VARCHAR(8)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="username" type="VARCHAR(255)">
+            <column name="username" type="VARCHAR(50)">
                 <constraints unique="true" nullable="false"/>
             </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(16)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+
+        <insert tableName="user">
+            <column name="id" value="1"/>
+            <column name="username" value="admin"/>
+            <column name="password"
+                    value="$2a$10$8vg6RqGwUBJXM/Tz4062eeyQ8CtcL0GNAZnwc7KOzQzNsBC3CB38y"/> <!-- password="admin" -->
+            <column name="role" value="ROLE_MANAGER"/>
+        </insert>
     </changeSet>
 </databaseChangeLog>
