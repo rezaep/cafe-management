@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="Reza Ebrahimpour" id="ea012a11-466e-4fd4-8ner-9b943fdcj466">
+        <createTable tableName="table">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="number" type="INT" >
+                <constraints unique="true"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Reza Ebrahimpour" id="026550d7-1289-4092-b1dc-4b59af958452">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="table"
+                                 constraintName="fk_user_id" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+    </changeSet>
+</databaseChangeLog>
