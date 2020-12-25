@@ -1,5 +1,6 @@
 package com.sflpro.cafemanager.user.service;
 
+import com.sflpro.cafemanager.exception.AlreadyExistException;
 import com.sflpro.cafemanager.user.domain.entity.User;
 import com.sflpro.cafemanager.user.domain.enums.UserRole;
 import com.sflpro.cafemanager.user.domain.model.UserModel;
@@ -13,6 +14,10 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserModel createUser(UserRole role, String username) {
+        if (userRepository.existsUserByUsername(username)) {
+            throw new AlreadyExistException("A user with the given username already exists.");
+        }
+
         User user = new User()
                 .setRole(role)
                 .setUsername(username);
