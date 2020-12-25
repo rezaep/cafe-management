@@ -18,7 +18,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ProductModel createUser(@Valid @RequestBody CreatProductRequest request) {
+    public ProductModel createProduct(@Valid @RequestBody CreatProductRequest request) {
         return productService.createProduct(request.getName(), request.getPrice());
     }
 }
