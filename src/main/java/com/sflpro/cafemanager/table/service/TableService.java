@@ -3,6 +3,7 @@ package com.sflpro.cafemanager.table.service;
 import com.sflpro.cafemanager.exception.AlreadyExistException;
 import com.sflpro.cafemanager.exception.NotFoundException;
 import com.sflpro.cafemanager.table.domain.entity.Table;
+import com.sflpro.cafemanager.table.domain.model.AssignedTableModel;
 import com.sflpro.cafemanager.table.domain.model.TableModel;
 import com.sflpro.cafemanager.table.exception.TableAlreadyAssignedException;
 import com.sflpro.cafemanager.table.repository.TableRepository;
@@ -10,6 +11,9 @@ import com.sflpro.cafemanager.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +48,13 @@ public class TableService {
         table.setUser(user);
 
         tableRepository.save(table);
+    }
+
+    public List<AssignedTableModel> getAssignedTables(long userId) {
+        return tableRepository.findAssignedTables(userId)
+                .stream()
+                .map(table -> new AssignedTableModel(table.getId(), table.getNumber()))
+                .collect(Collectors.toList());
     }
 
     private TableModel convertToModel(Table table) {
