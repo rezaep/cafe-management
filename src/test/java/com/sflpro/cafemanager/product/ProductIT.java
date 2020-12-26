@@ -1,17 +1,17 @@
 package com.sflpro.cafemanager.product;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sflpro.cafemanager.AbstractSpringIntegrationTest;
 import com.sflpro.cafemanager.product.controller.model.request.CreatProductRequest;
 import com.sflpro.cafemanager.product.domain.entity.Product;
 import com.sflpro.cafemanager.product.domain.model.ProductModel;
 import com.sflpro.cafemanager.product.model.ProductTestDataBuilder;
 import com.sflpro.cafemanager.product.repository.ProductRepository;
+import com.sflpro.cafemanager.security.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
@@ -24,11 +24,6 @@ class ProductIT extends AbstractSpringIntegrationTest {
     public static final String CREATE_PRODUCT_URL = "/products";
 
     @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
     private ProductRepository productRepository;
 
     @BeforeEach
@@ -37,6 +32,7 @@ class ProductIT extends AbstractSpringIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles = UserRole.MANAGER_ROLE)
     void shouldCreateProductAndReturnMappedProductInResponse() throws Exception {
         Product product = ProductTestDataBuilder.aValidProduct()
                 .build();

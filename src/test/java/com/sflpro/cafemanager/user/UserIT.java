@@ -1,6 +1,5 @@
 package com.sflpro.cafemanager.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sflpro.cafemanager.AbstractSpringIntegrationTest;
 import com.sflpro.cafemanager.exception.NotFoundException;
 import com.sflpro.cafemanager.table.domain.entity.Table;
@@ -19,12 +18,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static com.sflpro.cafemanager.security.UserRole.MANAGER_ROLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,11 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserIT extends AbstractSpringIntegrationTest {
     public static final String CREATE_USER_URL = "/users";
     public static final String ASSIGN_TABLE_TO_USER_URL = "/users/assign";
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -50,11 +45,13 @@ class UserIT extends AbstractSpringIntegrationTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"ROLE_MANAGER, john", "ROLE_WAITER, arthur"})
-    void shouldCreateUserAndReturnMappedUserInResponse(UserRole role, String username) throws Exception {
+    @CsvSource({"ROLE_MANAGER, john, password1", "ROLE_WAITER, arthur, password2"})
+    @WithMockUser(roles = MANAGER_ROLE)
+    void shouldCreateUserAndReturnMappedUserInResponse(UserRole role, String username, String password) throws Exception {
         CreatUserRequest request = new CreatUserRequest()
                 .setRole(role)
-                .setUsername(username);
+                .setUsername(username)
+                .setPassword(password);
 
         String requestJson = objectMapper.writeValueAsString(request);
 
@@ -84,8 +81,11 @@ class UserIT extends AbstractSpringIntegrationTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = MANAGER_ROLE)
     void testAssignTableToWaiter() throws Exception {
-        User waiter = UserTestDataBuilder.aWaiter().build();
+        User waiter = UserTestDataBuilder.aWaiter()
+                .withUsername("james")
+                .build();
         userRepository.save(waiter);
 
         Table table = TableTestDataBuilder.anUnassignedTable().build();

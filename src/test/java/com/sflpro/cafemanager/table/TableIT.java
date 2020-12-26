@@ -1,6 +1,5 @@
 package com.sflpro.cafemanager.table;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sflpro.cafemanager.AbstractSpringIntegrationTest;
 import com.sflpro.cafemanager.table.controller.model.request.CreatTableRequest;
 import com.sflpro.cafemanager.table.controller.model.response.AssignedTablesResponse;
@@ -16,11 +15,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
+import static com.sflpro.cafemanager.security.UserRole.MANAGER_ROLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,12 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class TableIT extends AbstractSpringIntegrationTest {
     public static final String CREATE_TABLE_URL = "/tables";
-    public static final String GET_ASSIGNED_TABLES_URL = "/tables/assigned/{userId}";
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
+    public static final String GET_ASSIGNED_TABLES_URL = "/tables/assigned";
 
     @Autowired
     private TableRepository tableRepository;
@@ -47,6 +44,7 @@ class TableIT extends AbstractSpringIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles = MANAGER_ROLE)
     void shouldCreateTableAndReturnMappedTableInResponse() throws Exception {
         CreatTableRequest request = new CreatTableRequest()
                 .setNumber(1);
@@ -91,7 +89,12 @@ class TableIT extends AbstractSpringIntegrationTest {
 
         tableRepository.saveAll(savedTables);
 
-        MvcResult mvcResult = mockMvc.perform(get(GET_ASSIGNED_TABLES_URL, 1)
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(waiter.getUsername()
+                , waiter.getPassword());
+        token.setDetails(waiter);
+        SecurityContextHolder.getContext().setAuthentication(token);
+
+        MvcResult mvcResult = mockMvc.perform(get(GET_ASSIGNED_TABLES_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
