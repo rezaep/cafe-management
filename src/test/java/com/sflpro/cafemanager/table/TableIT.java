@@ -80,6 +80,8 @@ class TableIT extends AbstractSpringIntegrationTest {
         User waiter = UserTestDataBuilder.aWaiter().build();
         userRepository.save(waiter);
 
+        setupUserAuthentication(waiter);
+
         Table table1 = TableTestDataBuilder.aTable().withNumber(1).build();
         Table table2 = TableTestDataBuilder.aTable().withNumber(2).build();
         Table table3 = TableTestDataBuilder.aTable().withNumber(3).withUser(waiter).build();
@@ -88,11 +90,6 @@ class TableIT extends AbstractSpringIntegrationTest {
         List<Table> savedTables = List.of(table1, table2, table3, table4);
 
         tableRepository.saveAll(savedTables);
-
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(waiter.getUsername()
-                , waiter.getPassword());
-        token.setDetails(waiter);
-        SecurityContextHolder.getContext().setAuthentication(token);
 
         MvcResult mvcResult = mockMvc.perform(get(GET_ASSIGNED_TABLES_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -108,5 +105,12 @@ class TableIT extends AbstractSpringIntegrationTest {
                         new AssignedTableModel(table3.getId(), table3.getNumber()),
                         new AssignedTableModel(table4.getId(), table4.getNumber())
                 );
+    }
+
+    private void setupUserAuthentication(User user) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername()
+                , user.getPassword());
+        token.setDetails(user);
+        SecurityContextHolder.getContext().setAuthentication(token);
     }
 }
