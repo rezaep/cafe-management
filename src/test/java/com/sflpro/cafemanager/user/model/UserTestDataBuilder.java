@@ -4,9 +4,14 @@ import com.sflpro.cafemanager.user.domain.entity.User;
 import com.sflpro.cafemanager.user.domain.enums.UserRole;
 
 public class UserTestDataBuilder {
+    public static final String MANAGER_USERNAME = "John";
+    public static final String WAITER_USERNAME = "Arthur";
+    public static final String PASSWORD = "password";
+
     private long id;
     private UserRole role;
     private String username;
+    private String password;
 
     private UserTestDataBuilder() {
 
@@ -19,19 +24,22 @@ public class UserTestDataBuilder {
     public static UserTestDataBuilder aManager() {
         return aUser()
                 .withRole(UserRole.ROLE_MANAGER)
-                .withUsername("john");
+                .withUsername(MANAGER_USERNAME)
+                .withPassword(PASSWORD);
     }
 
     public static UserTestDataBuilder aWaiter() {
         return aUser()
                 .withRole(UserRole.ROLE_WAITER)
-                .withUsername("arthur");
+                .withUsername(WAITER_USERNAME)
+                .withPassword(PASSWORD);
     }
 
-    public UserTestDataBuilder with(long id, UserRole role, String username) {
+    public UserTestDataBuilder with(long id, UserRole role, String username, String password) {
         this.id = id;
         this.role = role;
         this.username = username;
+        this.password = password;
 
         return this;
     }
@@ -54,10 +62,17 @@ public class UserTestDataBuilder {
         return this;
     }
 
+    public UserTestDataBuilder withPassword(String password) {
+        this.password = password;
+
+        return this;
+    }
+
     public User build() {
         return new User()
                 .setId(id)
                 .setRole(role)
-                .setUsername(username);
+                .setUsername(username)
+                .setPassword(password);
     }
 }
