@@ -12,4 +12,6 @@ public class CreatUserRequest {
     private UserRole role;
     @NotEmpty
     private String username;
+    @NotEmpty
+    private String password;
 }

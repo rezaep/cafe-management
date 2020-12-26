@@ -23,7 +23,7 @@ public class UserController {
     @PostMapping
     @Secured(UserRole.Code.MANAGER)
     public UserModel createUser(@Valid @RequestBody CreatUserRequest request) {
-        return userService.createUser(request.getRole(), request.getUsername());
+        return userService.createUser(request.getRole(), request.getUsername(), request.getPassword());
     }
 
     @PostMapping("assign")

@@ -2,6 +2,7 @@ package com.sflpro.cafemanager.user.service;
 
 import com.sflpro.cafemanager.exception.AlreadyExistException;
 import com.sflpro.cafemanager.exception.NotFoundException;
+import com.sflpro.cafemanager.security.SecurityUtil;
 import com.sflpro.cafemanager.table.service.TableService;
 import com.sflpro.cafemanager.user.domain.entity.User;
 import com.sflpro.cafemanager.user.domain.enums.UserRole;
@@ -16,15 +17,17 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final TableService tableService;
+    private final SecurityUtil securityUtil;
 
-    public UserModel createUser(UserRole role, String username) {
+    public UserModel createUser(UserRole role, String username, String password) {
         if (userRepository.existsUserByUsername(username)) {
             throw new AlreadyExistException("A user with the given username already exists.");
         }
 
         User user = new User()
                 .setRole(role)
-                .setUsername(username);
+                .setUsername(username)
+                .setPassword(securityUtil.encodePassword(password));
 
         userRepository.save(user);
 
