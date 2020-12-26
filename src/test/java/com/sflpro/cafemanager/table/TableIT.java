@@ -1,7 +1,7 @@
 package com.sflpro.cafemanager.table;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sflpro.cafemanager.AbstractIT;
+import com.sflpro.cafemanager.AbstractSpringIntegrationTest;
 import com.sflpro.cafemanager.table.controller.model.request.CreatTableRequest;
 import com.sflpro.cafemanager.table.controller.model.response.AssignedTablesResponse;
 import com.sflpro.cafemanager.table.domain.entity.Table;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class TableIT extends AbstractIT {
+class TableIT extends AbstractSpringIntegrationTest {
     public static final String CREATE_TABLE_URL = "/tables";
     public static final String GET_ASSIGNED_TABLES_URL = "/tables/assigned/{userId}";
 

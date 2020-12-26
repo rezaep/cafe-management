@@ -1,7 +1,7 @@
 package com.sflpro.cafemanager.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sflpro.cafemanager.AbstractIT;
+import com.sflpro.cafemanager.AbstractSpringIntegrationTest;
 import com.sflpro.cafemanager.exception.NotFoundException;
 import com.sflpro.cafemanager.table.domain.entity.Table;
 import com.sflpro.cafemanager.table.model.TableTestDataBuilder;
@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class UserIT extends AbstractIT {
+class UserIT extends AbstractSpringIntegrationTest {
     public static final String CREATE_USER_URL = "/users";
     public static final String ASSIGN_TABLE_TO_USER_URL = "/users/assign";
 
@@ -50,7 +50,7 @@ class UserIT extends AbstractIT {
     }
 
     @ParameterizedTest
-    @CsvSource({"MANAGER, john", "WAITER, arthur"})
+    @CsvSource({"ROLE_MANAGER, john", "ROLE_WAITER, arthur"})
     void shouldCreateUserAndReturnMappedUserInResponse(UserRole role, String username) throws Exception {
         CreatUserRequest request = new CreatUserRequest()
                 .setRole(role)

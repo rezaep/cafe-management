@@ -1,7 +1,7 @@
 package com.sflpro.cafemanager.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sflpro.cafemanager.AbstractIT;
+import com.sflpro.cafemanager.AbstractSpringIntegrationTest;
 import com.sflpro.cafemanager.product.controller.model.request.CreatProductRequest;
 import com.sflpro.cafemanager.product.domain.entity.Product;
 import com.sflpro.cafemanager.product.domain.model.ProductModel;
@@ -10,7 +10,6 @@ import com.sflpro.cafemanager.product.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -21,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ProductIT extends AbstractIT {
+class ProductIT extends AbstractSpringIntegrationTest {
     public static final String CREATE_PRODUCT_URL = "/products";
 
     @Autowired
